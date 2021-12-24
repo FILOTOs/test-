@@ -1,25 +1,38 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"regexp"
+	"strings"
+)
 
 func main() {
-	for {
-		var s string
-		fmt.Print("enter your question")
-		fmt.Scanf("%s", &s)
 
-		switch s {
-		case "name":
-			fmt.Println("Max")
-		case "age":
-			fmt.Printf("I am 24")
-		default:
-			fmt.Println("What are u talking about?")
+	mp := make(map[string]string)
+	mp[".*name.*"] = "My name is Max"
+	mp["(hi)|(privet)|(hello)"] = "Hi, nice to meet you"
+	mp[".*you.*like.*"] = "I like talking to you :)"
+
+	for {
+
+		fmt.Println("enter your question:")
+		str, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		str = strings.ToLower(strings.Replace(str, "\n", "", -1))
+
+		answerFound := false
+		for k, v := range mp {
+			if matched, _ := regexp.MatchString(k, str); matched {
+				answerFound = true
+				fmt.Println(v)
+
+			}
 
 		}
-
-		fmt.Scanln()
-		fmt.Println()
-
+		if !answerFound {
+			fmt.Println("I have no idea")
+		}
 	}
+	fmt.Scanln()
 }

@@ -8,11 +8,13 @@ import (
 	"strings"
 )
 
+//создаем структуру человека типа "Person"
 type Person struct {
 	Name string
 	Age  int
 }
 
+//создаем структуру справочника
 type PhoneLookup struct {
 	Numbers map[string]Person
 }
@@ -23,6 +25,7 @@ func NewPhoneLookup() PhoneLookup {
 	}
 }
 
+//метод для добавления номера в справочник
 func (p *PhoneLookup) AddNumber(phone, name string, age int) {
 	p.Numbers[phone] = Person{
 		Name: name,
@@ -30,6 +33,7 @@ func (p *PhoneLookup) AddNumber(phone, name string, age int) {
 	}
 }
 
+//метод где мы получаем номер
 func (p *PhoneLookup) GetNumber(phone string) Person {
 	if person, ok := p.Numbers[phone]; ok {
 		return person
@@ -45,7 +49,7 @@ func add() error {
 	fmt.Print("input number: ")
 	fmt.Scanf("%s\n", &phone)
 	// check phone is correct
-	if matched, _ := regexp.MatchString("([0-9]|\\+)+", phone); matched {
+	if matched, _ := regexp.MatchString("(8|\\+7)[0-9]{10}", phone); !matched {
 		return fmt.Errorf("wrong phone")
 	}
 
@@ -53,7 +57,7 @@ func add() error {
 	name, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 	name = strings.ToLower(strings.Replace(name, "\n", "", -1))
 	// check phone is correct
-	if matched, _ := regexp.MatchString("([A-Za-z])+", name); matched {
+	if matched, _ := regexp.MatchString("[a-z]+", name); !matched {
 		return fmt.Errorf("wrong name")
 	}
 

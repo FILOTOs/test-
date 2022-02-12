@@ -1,70 +1,38 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
-type stack struct {
-	slc []int
-}
-
-func newStack() *stack {
-	return &stack{
-		slc: []int{},
+func checkFormula(f string) bool {
+	stc := newStack()
+	symbolCount := 0
+	for _, r := range f {
+		if r == '(' {
+			stc.push(0)
+			symbolCount = 0
+			continue
+		}
+		if r == ')' {
+			_, err := stc.pop()
+			if err != nil || symbolCount == 0 {
+				return false
+			}
+			continue
+		}
+		symbolCount++
 	}
-}
-
-func (s *stack) push(item int) {
-	fmt.Println("push")
-	s.slc = append(s.slc, item)
-}
-
-func (s *stack) print() {
-	fmt.Println("stack: ", s.slc)
-}
-
-func (s *stack) pop() (int, error) {
-	fmt.Println("pop")
-	if len(s.slc) == 0 {
-		return -1, fmt.Errorf("pop error: stack is empty")
-	}
-	res := s.slc[len(s.slc)-1]
-	s.slc = s.slc[:len(s.slc)-1]
-	return res, nil
+	return true
 }
 
 func main() {
-	stc := newStack()
-	stc.push(1)
-	stc.print()
-	stc.push(2)
-	stc.print()
-	stc.push(3)
-	stc.print()
-	val, err := stc.pop()
-	if err != nil {
-		fmt.Println(err)
-		return
+	tests := []string{
+		"((1+2)*(3+4)*(5+6))*(2+3)",
+		"(1+2))",
+		"))1*2",
+		"((1+2)*(3+4)*(5+6))*(2+3))))",
+		"(()(2+3)",
+		"(2+3)",
 	}
-	fmt.Println(val)
-	stc.print()
-	val, err = stc.pop()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(val)
-	stc.print()
-	val, err = stc.pop()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(val)
-	stc.print()
-	val, err = stc.pop()
-	if err != nil {
-		fmt.Println(err)
-		return
+	for _, t := range tests {
+		fmt.Println(t, ":", checkFormula(t))
 	}
 }

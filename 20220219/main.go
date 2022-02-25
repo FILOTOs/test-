@@ -45,7 +45,8 @@ func (t *tree) print() {
 func (t *tree) printPretty(level int, parentNodeId *int) {
 	for _, n := range t.nodes {
 		if (n.parentNodeId == nil && parentNodeId == nil) || (n.parentNodeId != nil && parentNodeId != nil && *n.parentNodeId == *parentNodeId) {
-			fmt.Printf("%"+fmt.Sprintf("%ds", 10)+"\n", n.val)
+			v := fmt.Sprintf("%%%ds\n", level*10)
+			fmt.Printf(v, n.val)
 			t.printPretty(level+1, &n.nodeId)
 		}
 	}
@@ -70,6 +71,16 @@ func main() {
 	})
 	tree.addNode(&node{
 		nodeId:       3,
+		parentNodeId: &rootNodeId,
+		val:          "node3",
+	})
+	tree.addNode(&node{
+		nodeId:       4,
+		parentNodeId: &rootNodeId,
+		val:          "node4",
+	})
+	tree.addNode(&node{
+		nodeId:       5,
 		parentNodeId: &rootNodeId,
 		val:          "node3",
 	})

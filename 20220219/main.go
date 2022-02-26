@@ -2,17 +2,31 @@ package main
 
 import "fmt"
 
+type person struct {
+	name    string
+	surname string
+	age     int
+}
+
+func (p *person) print() {
+	fmt.Printf(p.str())
+}
+
+func (p *person) str() string {
+	return fmt.Sprintf("%s %s (%d лет)", p.name, p.surname, p.age)
+}
+
 type node struct {
 	nodeId       int
 	parentNodeId *int
-	val          string
+	person       *person
 }
 
-type tree struct {
+type familyTree struct {
 	nodes []*node
 }
 
-func (t *tree) addNode(n *node) error {
+func (t *familyTree) addNode(n *node) (*node, error) {
 
 	if n.parentNodeId != nil {
 		found := false
@@ -23,67 +37,81 @@ func (t *tree) addNode(n *node) error {
 			}
 		}
 		if !found {
-			return fmt.Errorf("parentNode not found")
+			return nil, fmt.Errorf("parentNode not found")
 		}
 	}
 
 	t.nodes = append(t.nodes, n)
 
-	return nil
+	return n, nil
 }
 
-func (t *tree) print() {
+func (t *familyTree) print() {
 	for _, n := range t.nodes {
 		if n.parentNodeId == nil {
-			fmt.Printf("nodeId: %d, parentNodeId: %v, val: %s\n", n.nodeId, nil, n.val)
+			fmt.Printf("nodeId: %d, parentNodeId: %v, val: %s\n", n.nodeId, nil, n.person.str())
 		} else {
-			fmt.Printf("nodeId: %d, parentNodeId: %v, val: %s\n", n.nodeId, *n.parentNodeId, n.val)
+			fmt.Printf("nodeId: %d, parentNodeId: %v, val: %s\n", n.nodeId, *n.parentNodeId, n.person.str())
 		}
 	}
 }
 
-func (t *tree) printPretty(level int, parentNodeId *int) {
+func (t *familyTree) printPretty(level int, parentNodeId *int) {
 	for _, n := range t.nodes {
 		if (n.parentNodeId == nil && parentNodeId == nil) || (n.parentNodeId != nil && parentNodeId != nil && *n.parentNodeId == *parentNodeId) {
-			v := fmt.Sprintf("%%%ds\n", level*10)
-			fmt.Printf(v, n.val)
+			for i := 0; i < level; i++ {
+				fmt.Print("   ")
+			}
+			fmt.Printf("%s\n", n.person.str())
 			t.printPretty(level+1, &n.nodeId)
 		}
 	}
 }
 
-func newTree() *tree {
-	return &tree{}
+func newFamilyTree() *familyTree {
+	return &familyTree{}
 }
 
 func main() {
-	tree := newTree()
-	rootNodeId := 1
-	tree.addNode(&node{
-		nodeId: rootNodeId,
-		val:    "root",
+	tree := newFamilyTree()
+	// granny
+	grandFather, err := tree.addNode(&node{
+		nodeId: 1,
+		person: &person{
+			name:    "Андрей",
+			surname: "Володин",
+			age:     67,
+		},
 	})
-
-	tree.addNode(&node{
+	if err != nil {
+		panic(err)
+	}
+	//
+	father, err := tree.addNode(&node{
 		nodeId:       2,
-		parentNodeId: &rootNodeId,
-		val:          "node2",
+		parentNodeId: &grandFather.nodeId,
+		person: &person{
+			name:    "Алексей",
+			surname: "Володин",
+			age:     39,
+		},
 	})
-	tree.addNode(&node{
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = tree.addNode(&node{
 		nodeId:       3,
-		parentNodeId: &rootNodeId,
-		val:          "node3",
+		parentNodeId: &father.nodeId,
+		person: &person{
+			name:    "Макс",
+			surname: "Володин",
+			age:     15,
+		},
 	})
-	tree.addNode(&node{
-		nodeId:       4,
-		parentNodeId: &rootNodeId,
-		val:          "node4",
-	})
-	tree.addNode(&node{
-		nodeId:       5,
-		parentNodeId: &rootNodeId,
-		val:          "node3",
-	})
+	if err != nil {
+		panic(err)
+	}
 
 	tree.printPretty(0, nil)
 }

@@ -21,16 +21,17 @@ func (r *rect) volume() (int, error) {
 	}
 
 	if len(errs) > 0 {
-		var s string
+		var str string
 		for i, e := range errs {
 			if len(errs)-1 == i {
-				s = s + e
+				// if it's the last item
+				str = str + e
 			} else {
-				s = s + e + ", "
+				str = str + e + ", "
 			}
 
 		}
-		return 0, fmt.Errorf("%s are negative", s)
+		return 0, fmt.Errorf("%s are negative", str)
 
 	}
 

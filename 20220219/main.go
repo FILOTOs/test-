@@ -102,12 +102,27 @@ func main() {
 
 	_, err = tree.addNode(&node{
 		nodeId:       3,
+<<<<<<< Updated upstream
 		parentNodeId: &father.nodeId,
 		person: &person{
 			name:    "Макс",
 			surname: "Володин",
 			age:     15,
 		},
+=======
+		parentNodeId: &rootNodeId,
+		val:          "node3",
+	})
+	tree.addNode(&node{
+		nodeId:       4,
+		parentNodeId: &rootNodeId,
+		val:          "node4",
+	})
+	tree.addNode(&node{
+		nodeId:       5,
+		parentNodeId: &rootNodeId,
+		val:          "node5",
+>>>>>>> Stashed changes
 	})
 	if err != nil {
 		panic(err)

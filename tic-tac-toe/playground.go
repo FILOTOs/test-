@@ -19,24 +19,29 @@ func (p *playground) Init() {
 func (p *playground) Print() {
 	for i, r := range p.Board {
 		for j, _ := range r {
-			if p.Board [i][j] == 0 {
+			if p.Board[i][j] == 0 {
 				fmt.Print("_")
 			}
-			if p.Board [i][j] == 1 {
+			if p.Board[i][j] == 1 {
 				fmt.Print("X")
 			}
-			if p.Board [i][j] == 2 {
+			if p.Board[i][j] == 2 {
 				fmt.Print("O")
 			}
 		}
 		fmt.Println()
 	}
+
 }
 
 func NewPlayground() *playground {
 	return &playground{}
 }
 
-func (p *playground) SetMove(i, j int, commandType uint32){
-	p.Board[i][j] = int(commandType)
+func (p *playground) SetMove(i, j int, commandType uint32) bool {
+	if p.Board[i][j] == 0 {
+		p.Board[i][j] = int(commandType)
+		return true
+	}
+	return false
 }

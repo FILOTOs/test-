@@ -20,13 +20,13 @@ func (p *playground) Print() {
 	for i, r := range p.Board {
 		for j, _ := range r {
 			if p.Board[i][j] == 0 {
-				fmt.Print("_")
+				fmt.Print(" _ ")
 			}
 			if p.Board[i][j] == 1 {
-				fmt.Print("X")
+				fmt.Print(" X ")
 			}
 			if p.Board[i][j] == 2 {
-				fmt.Print("O")
+				fmt.Print(" O ")
 			}
 		}
 		fmt.Println()

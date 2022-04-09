@@ -9,10 +9,43 @@ type ListNode struct {
 
 func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
 	cur1, cur2 := list1, list2
-	var res *ListNode
+	var res, curRes *ListNode
+	var cur1Move,cur2Move bool
 	for {
+		cur1Move,cur2Move = false, false
+		//check we reached both lists and break
 		if cur1 == nil && cur2 == nil {
 			break
+		}
+		//add node to res if either we reached the sec list or value of the second list loe one of the first list
+		if cur1 != nil && (cur2 == nil || cur1.Val <= cur2.Val) {
+			if res != nil {
+				curRes.Next = &ListNode{Val: cur1.Val}
+				curRes = curRes.Next
+			} else {
+				curRes = &ListNode{Val: cur1.Val}
+				res = curRes
+			}
+			cur1Move = true
+		}
+		//add node to res if either we reached the 1 list or value of the 1 list loe one of the 2 list
+		if cur2 != nil && (cur1 == nil || cur2.Val <= cur1.Val) {
+			if res != nil {
+				curRes.Next = &ListNode{Val: cur2.Val}
+				curRes = curRes.Next
+			} else {
+				curRes = &ListNode{Val: cur2.Val}
+				res = curRes
+			}
+			cur2Move = true
+		}
+		//move to the next node for the first list
+		if cur1Move {
+			cur1 = cur1.Next
+		}
+		//move to the next node for the second list
+		if cur2Move {
+			cur2 = cur2.Next
 		}
 	}
 	return res
